@@ -27,8 +27,11 @@ startx = 20
 starty = 20
 
 player_surface = pygame.Surface((w+300,w+100))
-pygame.draw.rect(player_surface, (r, g, b, a), (startx, starty, w, h)) # rect: (x1, y1, width, height)
 player_surface = player_surface.convert()
+
+pygame.draw.rect(player_surface, (r, g, b, a), (startx, starty, w, h))
+pygame.draw.rect(player_surface, (0, 255, 0, a), (startx+10, starty+20, w, h))
+
 screen.blit(player_surface, (0, 0))
 
 clock = pygame.time.Clock()
