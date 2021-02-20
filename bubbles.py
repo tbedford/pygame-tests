@@ -4,20 +4,19 @@ import random
 
 class Bubble:
 
-    deltax = +2
-    deltay = -2
-    growth = 1
-    max_radius = 100
-    min_radius = 10
-    radius = 20
-    speed = 2
+    max_radius = 80
+    min_radius = 20
+    max_ticks = 20
     
-    # create bubble at origin x, y
     def __init__(self, pos):
 
         x, y = pos
-        self.x = x - self.max_radius
-        self.y = y - self.max_radius
+        self.x = x
+        self.y = y
+        self.radius = 50        
+        self.growth = 1
+        self.deltax = +1
+        self.deltay = -1
 
         r = random.randint(0,255)
         g = random.randint(0,255)
@@ -25,21 +24,21 @@ class Bubble:
         a = 128
         color = (r, g, b, a)
         self.color = pygame.Color(color)
-#        
+        self.ticks = self.max_ticks # Countdown in frames
+        
         return
 
     def grow(self):
 
-        if self.radius >= self.max_radius:
-            self.growth = -1
-            print("Exceeded max radius: ", self.growth)
+        if self.ticks <= 0:
+            self.radius = self.radius + self.growth
 
-        if self.radius <= self.min_radius:
-            self.growth = +1
-            print("Exceeded min radius: ", self.growth)
-            
-        self.radius = self.radius + self.growth
-        pygame.display.set_caption("Radius: %d" % self.radius)
+            if self.radius >= self.max_radius:
+                self.growth = 0 - self.growth
+
+            if self.radius <= self.min_radius:
+                self.growth = 0 - self.growth
+            self.ticks = self.max_ticks
         return
     
     def update(self):
@@ -47,32 +46,33 @@ class Bubble:
         global screen_width
         global screen_height
         
+        self.x = self.x + self.deltax
+        self.y = self.y + self.deltay
+
         if self.x <= 0:
             self.deltax = 0 - self.deltax
 
-        if self.x >= screen_width - (self.radius * 2):
+        if self.x >= screen_width - ((self.radius * 2)):
             self.deltax = 0 - self.deltax
 
         if self.y <= 0:
             self.deltay = 0 - self.deltay
         
-        if self.y >= screen_height - (self.radius * 2):
+        if self.y >= screen_height - ((self.radius * 2)):
             self.deltay = 0 - self.deltay
-
-        self.x = self.x + self.deltax
-        self.y = self.y + self.deltay
         
         return
 
     def draw(self):
-         # Each bubble has its own surface
-        self.surface = pygame.Surface((self.max_radius*2,self.max_radius*2))
-        self.surface = self.surface.convert_alpha()         
+        surface = pygame.Surface((self.radius*2,self.radius*2))
+        surface = surface.convert_alpha()         
        # circle is drawn around circle origin x, y
-        pygame.draw.circle(self.surface, self.color, (self.max_radius, self.max_radius), self.radius) 
-        screen.blit(self.surface, (self.x, self.y))
+        pygame.draw.circle(surface, self.color, (self.radius, self.radius), self.radius) 
+        screen.blit(surface, (self.x, self.y))
         return
-    
+
+# MAIN
+
 screen_width = 640
 screen_height = 480
 
@@ -89,13 +89,10 @@ mainloop = True
 FPS = 60 
 playtime = 0.0
 bubbles = []
-ticks = 0
 
 while mainloop:
-    ticks = ticks + 1
     milliseconds = clock.tick(FPS) # do not go faster than this frame rate
     playtime += milliseconds / 1000.0
-    # ----- event handler -----
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             mainloop = False # pygame window closed by user
@@ -103,18 +100,15 @@ while mainloop:
             if event.key == pygame.K_ESCAPE:
                 mainloop = False # user pressed ESC
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            #print('Mouse down event type')
-            bubble = Bubble(pygame.mouse.get_pos())
-            bubbles.append(bubble)
+            bubbles.append(Bubble(pygame.mouse.get_pos()))
             
     # Do drawing
     screen.blit(background, (0,0))
     for bubble in bubbles:
-        #bubble.update()
+        bubble.grow()
+        bubble.update()
         bubble.draw()
-        if ticks > 2:
-            bubble.grow()
-            ticks = 0
+        bubble.ticks = bubble.ticks - 1
     pygame.display.flip()
 
     
