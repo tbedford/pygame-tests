@@ -5,7 +5,7 @@ import random
 class Bubble:
 
     max_radius = 80
-    min_radius = 20
+    min_radius = 10
     max_ticks = 20
     
     def __init__(self, pos):
@@ -13,7 +13,7 @@ class Bubble:
         x, y = pos
         self.x = x
         self.y = y
-        self.radius = 50        
+        self.radius = 30        
         self.growth = 1
         self.deltax = +1
         self.deltay = -1
@@ -25,7 +25,7 @@ class Bubble:
         color = (r, g, b, a)
         self.color = pygame.Color(color)
         self.ticks = self.max_ticks # Countdown in frames
-        
+        self.dead = False # True if dead
         return
 
     def grow(self):
@@ -38,6 +38,7 @@ class Bubble:
 
             if self.radius <= self.min_radius:
                 self.growth = 0 - self.growth
+                self.dead = True
             self.ticks = self.max_ticks
         return
     
@@ -73,12 +74,12 @@ class Bubble:
 
 # MAIN
 
-screen_width = 640
-screen_height = 480
+screen_width = 800
+screen_height = 600
 
 pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))
 
+screen = pygame.display.set_mode((screen_width, screen_height))
 background = pygame.Surface(screen.get_size()).convert()
 emily_art = pygame.image.load(os.path.join("data", 'emily_art.png')).convert()
 pygame.transform.scale(emily_art, (screen_width, screen_height), background)
@@ -89,6 +90,10 @@ mainloop = True
 FPS = 60 
 playtime = 0.0
 bubbles = []
+
+# Load music
+pygame.mixer.music.load("data/Komiku_Sunset_on_the_beach.mp3")
+pygame.mixer.music.play(-1)
 
 while mainloop:
     milliseconds = clock.tick(FPS) # do not go faster than this frame rate
@@ -109,9 +114,12 @@ while mainloop:
         bubble.update()
         bubble.draw()
         bubble.ticks = bubble.ticks - 1
+        if bubble.dead:
+            bubbles.pop(bubbles.index(bubble))
     pygame.display.flip()
-
     
 print("this 'game' was played for %.2f seconds" % playtime)
 pygame.quit()
- 
+
+print("Code - (c) Tony Bedford, 2021")
+print("Music by Komiku - Sunset on the Beach (c) Komiku, ? - 2021")
