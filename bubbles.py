@@ -122,4 +122,5 @@ print("this 'game' was played for %.2f seconds" % playtime)
 pygame.quit()
 
 print("Code - (c) Tony Bedford, 2021")
+print("Art - (c) Emily Bedford, 2021")
 print("Music by Komiku - Sunset on the Beach (c) Komiku, ? - 2021")
