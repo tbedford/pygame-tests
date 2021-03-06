@@ -15,8 +15,10 @@ class Bubble:
         self.y = y
         self.radius = 30        
         self.growth = 1
-        self.deltax = +1
-        self.deltay = -1
+
+        deltas = [1, -1]
+        self.deltax = deltas[random.randint(0, 1)]
+        self.deltay = deltas[random.randint(0, 1)]
 
         r = random.randint(0,255)
         g = random.randint(0,255)
