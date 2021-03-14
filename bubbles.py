@@ -16,9 +16,9 @@ class Bubble:
         self.radius = 30        
         self.growth = 1
 
-        deltas = [1, -1]
-        self.deltax = deltas[random.randint(0, 1)]
-        self.deltay = deltas[random.randint(0, 1)]
+        deltas = [1, -1, 2, -2, 3, -3]
+        self.deltax = deltas[random.randint(0, 5)]
+        self.deltay = deltas[random.randint(0, 5)]
 
         r = random.randint(0,255)
         g = random.randint(0,255)
@@ -107,7 +107,8 @@ while mainloop:
             if event.key == pygame.K_ESCAPE:
                 mainloop = False # user pressed ESC
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            bubbles.append(Bubble(pygame.mouse.get_pos()))
+            for i in range (20):
+                bubbles.append(Bubble(pygame.mouse.get_pos()))
             
     # Do drawing
     screen.blit(background, (0,0))
@@ -125,4 +126,4 @@ pygame.quit()
 
 print("Code - (c) Tony Bedford, 2021")
 print("Art - (c) Emily Bedford, 2021")
-print("Music by Komiku - Sunset on the Beach (c) Komiku, ? - 2021")
+print("Music - Sunset on the Beach - (c) Komiku, ? - 2021")
