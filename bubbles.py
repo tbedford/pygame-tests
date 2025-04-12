@@ -67,8 +67,9 @@ class Bubble:
         return
 
     def draw(self):
-        surface = pygame.Surface((self.radius*2,self.radius*2))
-        surface = surface.convert_alpha()         
+        # Fixed with AI,SRCALPHA parameter added
+        surface = pygame.Surface((self.radius*2,self.radius*2), pygame.SRCALPHA)
+        surface = surface.convert_alpha() # deprecated?         
        # circle is drawn around circle origin x, y
         pygame.draw.circle(surface, self.color, (self.radius, self.radius), self.radius) 
         screen.blit(surface, (self.x, self.y))
@@ -95,6 +96,9 @@ bubbles = []
 
 # Load music
 pygame.mixer.music.load("data/Komiku_Sunset_on_the_beach.mp3")
+#pygame.mixer.music.load("data/Knytt_Bouncy_Nifflas.mp3")
+#pygame.mixer.music.load("data/Knytt_Stories_An_Underwater_Adventure.ogg")
+
 pygame.mixer.music.play(-1)
 
 while mainloop:
